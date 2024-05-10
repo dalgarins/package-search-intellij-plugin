@@ -69,6 +69,7 @@ dependencies {
     implementation(packageSearchCatalog.ktor.client.logging)
     implementation(packageSearchCatalog.ktor.client.java)
     implementation(packageSearchCatalog.packagesearch.api.models)
+    implementation(packageSearchCatalog.nitrite)
     implementation(projects.plugin.gradle.base)
     implementation(projects.plugin.gradle.kmp)
     implementation(projects.plugin.maven)

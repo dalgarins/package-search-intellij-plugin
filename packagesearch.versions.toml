@@ -18,7 +18,7 @@ kotlinxDatetime = "0.4.1"
 kotlinxSerialization = "1.6.0"
 ktor = "2.3.5"
 logback = "1.4.11"
-nitrite = "3.4.4"
+nitrite = "4.2.1"
 packagesearchApiModels = "3.0.0"
 jewel = "0.15.0"
 ideStarter = "LATEST-EAP-SNAPSHOT"
@@ -67,7 +67,7 @@ ktor-server-compression = { module = "io.ktor:ktor-server-compression", version.
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-nitrite = { module = "org.dizitart:nitrite", version.ref = "nitrite" }
+nitrite = { module = "org.dizitart:potassium-nitrite", version.ref = "nitrite" }
 packagesearch-api-client = { module = "org.jetbrains.packagesearch:packagesearch-api-client", version.ref = "packagesearchApiModels" }
 packagesearch-api-models = { module = "org.jetbrains.packagesearch:packagesearch-api-models", version.ref = "packagesearchApiModels" }
 packagesearch-build-systems-models = { module = "org.jetbrains.packagesearch:packagesearch-build-systems-models", version.ref = "packagesearchApiModels" }

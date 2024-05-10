@@ -1,8 +1,8 @@
-package com.jetbrains.packagesearch.plugin.core.nitrite
+package com.jetbrains.packagesearch.plugin.utils
 
+import com.jetbrains.packagesearch.plugin.core.nitrite.DocumentPathBuilder
 import kotlin.reflect.KProperty
-import org.dizitart.no2.objects.ObjectFilter
-import org.dizitart.no2.objects.filters.ObjectFilters
+import org.dizitart.no2.filters.NitriteFilter
 
 object NitriteFilters {
 
@@ -26,6 +26,6 @@ object NitriteFilters {
             ObjectFilters.`in`(path, *value.toTypedArray())
 
         val ALL
-            get() = ObjectFilters.ALL
+            get() = NitriteFilter.ALL
     }
 }
