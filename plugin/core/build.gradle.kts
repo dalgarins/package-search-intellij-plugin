@@ -22,6 +22,12 @@ packagesearch {
 
 dependencies {
     api(packageSearchCatalog.packagesearch.api.client)
+    implementation(packageSearchCatalog.nitrite) {
+        exclude(group = "com.fasterxml.jackson.core")
+        exclude(group = "com.squareup.okhttp3")
+        exclude(group = "org.slf4j")
+    }
+    implementation(packageSearchCatalog.nitrite.bom)
     testRuntimeOnly(packageSearchCatalog.junit.jupiter.api)
     testRuntimeOnly(packageSearchCatalog.junit.jupiter.engine)
     testImplementation(packageSearchCatalog.kotlinx.coroutines.test)

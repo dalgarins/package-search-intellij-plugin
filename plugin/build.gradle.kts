@@ -69,12 +69,6 @@ dependencies {
     implementation(packageSearchCatalog.ktor.client.logging)
     implementation(packageSearchCatalog.ktor.client.java)
     implementation(packageSearchCatalog.packagesearch.api.models)
-    implementation(packageSearchCatalog.nitrite) {
-        exclude(group = "com.fasterxml.jackson.core")
-        exclude(group = "com.squareup.okhttp3")
-        exclude(group = "org.slf4j")
-    }
-    implementation(packageSearchCatalog.nitrite.bom)
     implementation(projects.plugin.gradle.base)
     implementation(projects.plugin.gradle.kmp)
     implementation(projects.plugin.maven)
