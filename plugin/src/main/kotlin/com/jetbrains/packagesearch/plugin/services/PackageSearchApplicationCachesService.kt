@@ -13,7 +13,6 @@ import com.intellij.openapi.components.Service.Level
 import com.intellij.openapi.components.service
 import com.jetbrains.packagesearch.plugin.PackageSearchBundle
 import com.jetbrains.packagesearch.plugin.core.PackageSearch
-import com.jetbrains.packagesearch.plugin.core.nitrite.buildDefaultNitrate
 import com.jetbrains.packagesearch.plugin.core.utils.IntelliJApplication
 import com.jetbrains.packagesearch.plugin.core.utils.PKGSInternalAPI
 import com.jetbrains.packagesearch.plugin.utils.ApiPackageCacheEntry
@@ -36,8 +35,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.launch
-import org.dizitart.no2.IndexOptions
-import org.dizitart.no2.IndexType
+import org.dizitart.kno2.getRepository
+import org.dizitart.kno2.nitrite
+import org.dizitart.kno2.serialization.KotlinXSerializationMapper
+import org.dizitart.no2.common.module.NitriteModule.module
+import org.dizitart.no2.index.IndexOptions
+import org.dizitart.no2.index.IndexType
+import org.dizitart.no2.mvstore.MVStoreModule
 import org.jetbrains.packagesearch.api.v3.http.PackageSearchApiClient
 import org.jetbrains.packagesearch.api.v3.http.PackageSearchEndpoints
 
@@ -49,13 +53,21 @@ class PackageSearchApplicationCachesService(private val coroutineScope: Coroutin
             get() = appSystemDir / "caches" / "packagesearch" / "db-v${PackageSearch.databaseVersion}.db"
     }
 
+    private fun getCacheFilePath() = appSystemDir
+        .resolve(cacheFilePath)
+        .apply { parent.toFile().mkdirs() }
+        .absolutePathString()
+
     @PKGSInternalAPI
-    val cache = buildDefaultNitrate(
-        path = appSystemDir
-            .resolve(cacheFilePath)
-            .apply { parent.toFile().mkdirs() }
-            .absolutePathString()
-    )
+    val cache =  nitrite {
+        loadModule(module(KotlinXSerializationMapper()))
+        loadModule(
+            MVStoreModule.withConfig()
+                .filePath(getCacheFilePath())
+                .compress(true)
+                .build()
+        )
+    }
 
     override fun dispose() {
         cache.close()
@@ -103,16 +115,16 @@ class PackageSearchApplicationCachesService(private val coroutineScope: Coroutin
 
     private suspend fun createIndexes() {
         searchesRepository.createIndex(
-            indexOptions = IndexOptions.indexOptions(IndexType.Unique),
-            path = ApiSearchEntry::searchHash
+            IndexOptions.indexOptions(IndexType.UNIQUE),
+            ApiSearchEntry::searchHash.name
         )
         packagesRepository.createIndex(
-            indexOptions = IndexOptions.indexOptions(IndexType.Unique),
-            path = ApiPackageCacheEntry::packageId
+            IndexOptions.indexOptions(IndexType.UNIQUE),
+            ApiPackageCacheEntry::packageId.name
         )
         packagesRepository.createIndex(
-            indexOptions = IndexOptions.indexOptions(IndexType.Unique),
-            path = ApiPackageCacheEntry::packageIdHash
+            IndexOptions.indexOptions(IndexType.UNIQUE),
+            ApiPackageCacheEntry::packageIdHash.name
         )
     }
 
@@ -137,9 +149,10 @@ class PackageSearchApplicationCachesService(private val coroutineScope: Coroutin
         }
 
     private suspend fun clearCaches() {
-        searchesRepository.removeAll()
-        packagesRepository.removeAll()
-        repositoryCache.removeAll()
+        searchesRepository.clear()
+        packagesRepository.clear()
+        repositoryCache.clear()
     }
 }
+
 

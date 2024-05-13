@@ -25,6 +25,8 @@ intellij {
 }
 
 dependencies {
+    api(packageSearchCatalog.nitrite)
+    api(platform(packageSearchCatalog.nitrite.bom))
     compileOnly(projects.plugin.gradle.tooling)
     sourceElements(projects.plugin.gradle.tooling)
     api(projects.plugin.core)

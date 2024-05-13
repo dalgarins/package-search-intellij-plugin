@@ -1,7 +1,5 @@
 package com.jetbrains.packagesearch.plugin.http
 
-import com.jetbrains.packagesearch.plugin.core.nitrite.NitriteFilters
-import com.jetbrains.packagesearch.plugin.core.nitrite.coroutines.CoroutineObjectRepository
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.plugins.cache.storage.CachedResponseData
 import io.ktor.http.Headers
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.toSet
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import org.dizitart.kno2.filters.eq
 import org.dizitart.no2.repository.ObjectRepository
 
 @Serializable
@@ -93,33 +92,22 @@ class NitriteKtorCache(
 ) : CacheStorage {
 
     override suspend fun find(url: Url, varyKeys: Map<String, String>): CachedResponseData? {
-        val filter = NitriteFilters.Object.eq(
-            path = SerializableCachedResponseData::url,
-            value = url.toString()
-        )
-        return repository.find(filter)
+
+        return repository.find(SerializableCachedResponseData::url eq url.toString())
             .singleOrNull()
             ?.toKtor()
     }
 
     override suspend fun findAll(url: Url): Set<CachedResponseData> {
-        val filter = NitriteFilters.Object.eq(
-            path = SerializableCachedResponseData::url,
-            value = url.toString()
-        )
-        return repository.find(filter)
+        return repository.find(SerializableCachedResponseData::url eq url.toString())
             .map { it.toKtor() }
             .toSet()
     }
 
     override suspend fun store(url: Url, data: CachedResponseData) {
         repository.update(
-            filter = NitriteFilters.Object.eq(
-                path = SerializableCachedResponseData::url,
-                value = url.toString()
-            ),
-            update = data.toSerializable(),
-            upsert = true
+            SerializableCachedResponseData::url eq url.toString(),
+            data.toSerializable(),
         )
     }
 

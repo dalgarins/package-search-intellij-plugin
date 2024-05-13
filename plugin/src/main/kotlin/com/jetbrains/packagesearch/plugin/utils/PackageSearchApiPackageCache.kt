@@ -168,9 +168,9 @@ class PackageSearchApiPackageCache(
                             } ?: return@forEach
                             val filter = packageIdSelector eq match
                             apiPackageCache.update(
-                                filter = filter,
-                                update = insert,
-                                updateOptions = UpdateOptions.updateOptions(true)
+                                filter,
+                                insert,
+                                UpdateOptions.updateOptions(true)
                             )
                         }
                     }

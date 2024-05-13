@@ -9,9 +9,12 @@ import com.jetbrains.packagesearch.plugin.core.utils.PKGSInternalAPI
 import com.jetbrains.packagesearch.plugin.core.utils.packageSearchProjectDataPath
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.div
+import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
+import org.dizitart.kno2.serialization.KotlinXSerializationMapper
 import org.dizitart.no2.Nitrite
-import org.h2.mvstore.MVStore
+import org.dizitart.no2.common.module.NitriteModule.module
+import org.dizitart.no2.mvstore.MVStoreModule
 
 @Service(Level.PROJECT)
 class PackageSearchProjectCachesService(private val project: Project) : Disposable {
@@ -22,13 +25,14 @@ class PackageSearchProjectCachesService(private val project: Project) : Disposab
 
     @PKGSInternalAPI
     val cache = nitrite {
-        loadModule(MVStoreModule.withConfig()
-            .filePath(cacheFilePath.absolutePathString())
-            .build())
+        loadModule(module(KotlinXSerializationMapper()))
+        loadModule(
+            MVStoreModule.withConfig()
+                .filePath(cacheFilePath.absolutePathString())
+                .compress(true)
+                .build()
+        )
     }
-
-    @PKGSInternalAPI
-    val cache = buildDefaultNitrate(cacheFilePath.absolutePathString())
 
     override fun dispose() = cache.close()
 
@@ -36,14 +40,3 @@ class PackageSearchProjectCachesService(private val project: Project) : Disposab
         cache.getRepository<T>(key)
 
 }
-
-
-fun buildDefaultNitrate(
-    path: String,
-    nitriteMapperConf: NitriteDocumentFormatBuilder.() -> Unit = {},
-) = Nitrite.builder()
-    .kotlinxNitriteMapper(builderAction = nitriteMapperConf)
-    .filePath(path)
-    .compressed()
-    .openOrCreate()
-    .asCoroutine()

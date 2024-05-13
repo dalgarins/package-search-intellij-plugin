@@ -9,6 +9,8 @@ plugins {
     `maven-publish`
 }
 dependencies {
+    api(packageSearchCatalog.nitrite)
+    api(platform(packageSearchCatalog.nitrite.bom))
     api(packageSearchCatalog.kotlinx.serialization.protobuf)
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly(packageSearchCatalog.junit4.base)

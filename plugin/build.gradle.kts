@@ -66,6 +66,12 @@ dependencies {
         exclude(group = "org.jetbrains.compose.runtime")
         exclude(group = "org.jetbrains.compose.foundation")
     }
+    implementation(packageSearchCatalog.nitrite.mvstore)
+    implementation(packageSearchCatalog.nitrite){
+        exclude(group = "com.fasterxml.jackson.core")
+        exclude(group = "com.squareup.okhttp3")
+        exclude(group = "org.slf4j")
+    }
     implementation(packageSearchCatalog.ktor.client.logging)
     implementation(packageSearchCatalog.ktor.client.java)
     implementation(packageSearchCatalog.packagesearch.api.models)
