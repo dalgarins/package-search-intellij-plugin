@@ -1,9 +1,7 @@
 package com.jetbrains.packagesearch.plugin.utils
 
-import com.jetbrains.packagesearch.plugin.core.nitrite.NitriteFilters
-import com.jetbrains.packagesearch.plugin.core.nitrite.coroutines.CoroutineObjectRepository
-import com.jetbrains.packagesearch.plugin.core.nitrite.insert
 import com.jetbrains.packagesearch.plugin.core.utils.suspendSafe
+import com.jetbrains.packagesearch.plugin.nitrite.NitriteFilters
 import io.ktor.client.request.HttpRequestBuilder
 import korlibs.crypto.SHA256
 import kotlin.random.Random
@@ -17,15 +15,16 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.dizitart.no2.repository.ObjectRepository
 import org.jetbrains.packagesearch.api.v3.ApiPackage
 import org.jetbrains.packagesearch.api.v3.ApiRepository
 import org.jetbrains.packagesearch.api.v3.http.PackageSearchApi
 import org.jetbrains.packagesearch.api.v3.http.SearchPackagesRequest
 
 class PackageSearchApiPackageCache(
-    private val apiPackageCache: CoroutineObjectRepository<ApiPackageCacheEntry>,
-    private val searchCache: CoroutineObjectRepository<ApiSearchEntry>,
-    private val repositoryCache: CoroutineObjectRepository<ApiRepositoryCacheEntry>,
+    private val apiPackageCache: ObjectRepository<ApiPackageCacheEntry>,
+    private val searchCache: ObjectRepository<ApiSearchEntry>,
+    private val repositoryCache: ObjectRepository<ApiRepositoryCacheEntry>,
     private val apiClient: PackageSearchApi,
     private val maxAge: Duration = Random.nextDouble(0.5, 1.0).days,
     private val isOnline: () -> Boolean,

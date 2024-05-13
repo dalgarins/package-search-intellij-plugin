@@ -68,6 +68,7 @@ ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negoti
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 nitrite = { module = "org.dizitart:potassium-nitrite", version.ref = "nitrite" }
+nitrite-bom = { module = "org.dizitart:nitrite-bom", version.ref = "nitrite" }
 packagesearch-api-client = { module = "org.jetbrains.packagesearch:packagesearch-api-client", version.ref = "packagesearchApiModels" }
 packagesearch-api-models = { module = "org.jetbrains.packagesearch:packagesearch-api-models", version.ref = "packagesearchApiModels" }
 packagesearch-build-systems-models = { module = "org.jetbrains.packagesearch:packagesearch-build-systems-models", version.ref = "packagesearchApiModels" }

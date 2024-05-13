@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.dizitart.no2.filters.NitriteFilter
 import org.jetbrains.packagesearch.api.v3.ApiMavenPackage
 import org.jetbrains.packagesearch.api.v3.ApiMavenRepository
 import org.jetbrains.packagesearch.api.v3.ApiPackage
@@ -121,7 +122,7 @@ suspend fun retrieveGradleDependencyModel(nativeModule: Module, buildFile: Path)
     project.service<GradleCacheService>()
         .dependencyRepository
         .update(
-            filter = NitriteFilters.Object.eq(
+            filter = Nitrite.eq(
                 path = GradleDependencyModelCacheEntry::buildFile,
                 value = buildFile.absolutePathString()
             ),

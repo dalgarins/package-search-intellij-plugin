@@ -2,7 +2,6 @@ package com.jetbrains.packagesearch.plugin.utils
 
 import com.intellij.openapi.project.Project
 import com.jetbrains.packagesearch.plugin.core.extensions.PackageSearchModuleBuilderContext
-import com.jetbrains.packagesearch.plugin.core.nitrite.coroutines.CoroutineNitrite
 import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

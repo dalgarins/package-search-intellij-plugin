@@ -1,6 +1,6 @@
-package com.jetbrains.packagesearch.plugin.utils
+package com.jetbrains.packagesearch.plugin.nitrite
 
-import com.jetbrains.packagesearch.plugin.core.nitrite.DocumentPathBuilder
+import com.jetbrains.packagesearch.plugin.core.data.ObjectFilter
 import kotlin.reflect.KProperty
 import org.dizitart.no2.filters.NitriteFilter
 

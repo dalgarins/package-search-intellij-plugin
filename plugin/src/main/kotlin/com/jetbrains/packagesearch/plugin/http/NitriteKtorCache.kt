@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.toSet
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import org.dizitart.no2.repository.ObjectRepository
 
 @Serializable
 class SerializableCachedResponseData(
@@ -88,7 +89,7 @@ fun SerializableCachedResponseData.toKtor() = CachedResponseData(
 )
 
 class NitriteKtorCache(
-    private val repository: CoroutineObjectRepository<SerializableCachedResponseData>,
+    private val repository: ObjectRepository<SerializableCachedResponseData>,
 ) : CacheStorage {
 
     override suspend fun find(url: Url, varyKeys: Map<String, String>): CachedResponseData? {
