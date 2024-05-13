@@ -1,14 +1,14 @@
 package com.jetbrains.packagesearch.plugin.nitrite
 
-import com.jetbrains.packagesearch.plugin.core.data.ObjectFilter
+import com.jetbrains.packagesearch.plugin.core.data
 import kotlin.reflect.KProperty
 import org.dizitart.no2.filters.NitriteFilter
 
 object NitriteFilters {
 
     object Object {
-        fun eq(path: DocumentPathBuilder, value: Any): ObjectFilter =
-            ObjectFilters.eq(path.build(), value)
+        fun eq(path: DocumentPathBuilder, value: Any): NitriteFilter =
+            .eq(path.build(), value)
 
         fun <T> eq(path: KProperty<T>, value: T): ObjectFilter =
             ObjectFilters.eq(path.name, value)
