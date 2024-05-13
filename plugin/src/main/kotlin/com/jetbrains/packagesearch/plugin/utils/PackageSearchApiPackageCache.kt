@@ -1,20 +1,19 @@
 package com.jetbrains.packagesearch.plugin.utils
 
 import com.jetbrains.packagesearch.plugin.core.utils.suspendSafe
-import com.jetbrains.packagesearch.plugin.nitrite.NitriteFilters
 import io.ktor.client.request.HttpRequestBuilder
 import korlibs.crypto.SHA256
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.singleOrNull
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.dizitart.kno2.filters.eq
+import org.dizitart.no2.collection.UpdateOptions
 import org.dizitart.no2.repository.ObjectRepository
 import org.jetbrains.packagesearch.api.v3.ApiPackage
 import org.jetbrains.packagesearch.api.v3.ApiRepository
@@ -57,7 +56,7 @@ class PackageSearchApiPackageCache(
         val sha = SHA256.digest(Json.encodeToString(request).toByteArray()).base64
         val contextName = "${Random.nextInt()} | ${this::class}#searchPackages"
         logDebug(contextName) { "Searching for packages | searchSha = $sha" }
-        val cachedEntry = searchCache.find(NitriteFilters.Object.eq(ApiSearchEntry::searchHash, sha))
+        val cachedEntry = searchCache.find(ApiSearchEntry::searchHash eq sha)
             .singleOrNull()
         if (cachedEntry != null) {
             val isOffline = !isOnline()
@@ -68,7 +67,7 @@ class PackageSearchApiPackageCache(
                 }
                 return cachedEntry.packages
             }
-            searchCache.remove(NitriteFilters.Object.eq(ApiSearchEntry::searchHash, sha))
+            searchCache.remove(ApiSearchEntry::searchHash eq sha)
         }
         logDebug(contextName) { "Fetching search results from the server | searchSha = $sha" }
         return apiClient.searchPackages(request)
@@ -85,7 +84,7 @@ class PackageSearchApiPackageCache(
             isOnlineStatus -> runCatching { apiClient.getKnownRepositories() }
                 .suspendSafe()
                 .onSuccess {
-                    repositoryCache.removeAll()
+                    repositoryCache.clear()
                     repositoryCache.insert(ApiRepositoryCacheEntry(it))
                 }
                 .getOrDefault(cached?.data ?: emptyList())
@@ -113,7 +112,7 @@ class PackageSearchApiPackageCache(
 
         // retrieve the packages from the local database
         val localDatabaseResults = apiPackageCache
-            .find(NitriteFilters.Object.`in`(packageIdSelector, ids))
+            .find(packageIdSelector eq ids)
             .filter { if (isOnlineStatus) Clock.System.now() < it.lastUpdate + maxAge else true }
             .toList()
 
@@ -163,16 +162,15 @@ class PackageSearchApiPackageCache(
                     val toInsert = cacheEntriesFromNetwork + unknownPackages
                     if (toInsert.isNotEmpty()) {
                         toInsert.forEach { insert ->
+                            val match = when {
+                                useHashes -> insert.packageIdHash
+                                else -> insert.packageId
+                            } ?: return@forEach
+                            val filter = packageIdSelector eq match
                             apiPackageCache.update(
-                                filter = NitriteFilters.Object.eq(
-                                    path = packageIdSelector,
-                                    value = when {
-                                        useHashes -> insert.packageIdHash
-                                        else -> insert.packageId
-                                    }
-                                ),
+                                filter = filter,
                                 update = insert,
-                                upsert = true
+                                updateOptions = UpdateOptions.updateOptions(true)
                             )
                         }
                     }
