@@ -14,6 +14,7 @@ import com.intellij.openapi.components.service
 import com.jetbrains.packagesearch.plugin.PackageSearchBundle
 import com.jetbrains.packagesearch.plugin.core.PackageSearch
 import com.jetbrains.packagesearch.plugin.core.utils.IntelliJApplication
+import com.jetbrains.packagesearch.plugin.core.utils.KotlinXSerializationMapper
 import com.jetbrains.packagesearch.plugin.core.utils.PKGSInternalAPI
 import com.jetbrains.packagesearch.plugin.utils.ApiPackageCacheEntry
 import com.jetbrains.packagesearch.plugin.utils.ApiRepositoryCacheEntry
@@ -37,7 +38,6 @@ import kotlinx.coroutines.future.future
 import kotlinx.coroutines.launch
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
-import org.dizitart.kno2.serialization.KotlinXSerializationMapper
 import org.dizitart.no2.common.module.NitriteModule.module
 import org.dizitart.no2.index.IndexOptions
 import org.dizitart.no2.index.IndexType
