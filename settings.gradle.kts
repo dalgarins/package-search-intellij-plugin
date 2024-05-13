@@ -18,7 +18,6 @@ dependencyResolutionManagement {
 }
 
 include(
-    ":nitrite",
     ":plugin",
     ":plugin:core",
     ":plugin:gradle",

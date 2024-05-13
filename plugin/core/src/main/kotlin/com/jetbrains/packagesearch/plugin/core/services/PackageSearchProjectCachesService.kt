@@ -5,7 +5,6 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.Service.Level
 import com.intellij.openapi.project.Project
 import com.jetbrains.packagesearch.plugin.core.PackageSearch
-import com.jetbrains.packagesearch.plugin.core.nitrite.buildDefaultNitrate
 import com.jetbrains.packagesearch.plugin.core.utils.PKGSInternalAPI
 import com.jetbrains.packagesearch.plugin.core.utils.packageSearchProjectDataPath
 import kotlin.io.path.absolutePathString
